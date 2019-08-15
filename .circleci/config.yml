@@ -23,7 +23,7 @@ jobs:
           command: |
               apt-get update -y
               apt-get install zip -y
-              zip codechan.zip .
+              zip /code/artifact/codechan.zip .
       - store_artifacts:
           path: /code/artifact
           destination: prefix
@@ -101,6 +101,8 @@ workflows:
   build_and_test:
     jobs:
       - dockerize
+      - package:
+          requires: dockerize
       - linting:
           requires:
           - dockerize

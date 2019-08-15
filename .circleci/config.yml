@@ -40,8 +40,7 @@ jobs:
           name: Deploy Over SSH
           command: |
             scp -oStrictHostKeyChecking=no -r ./docker-compose.yml "ubuntu@34.77.191.226:."
-            scp -oStrictHostKeyChecking=no -r ./Dockerfile "ubuntu@34.77.191.226:."
-            ssh -oStrictHostKeyChecking=no ubuntu@34.77.191.226 "sudo apt-get update -y && sudo apt-get install docker -y && docker pull vstromtsova/ca-project_web:latest && docker-compose up"
+            ssh -oStrictHostKeyChecking=no ubuntu@34.77.191.226 "sudo apt-get update -y && sudo apt-get install docker -y && docker pull vstromtsova/ca-project_web:latest && docker-compose up -d"
 
   deploy-production:
     docker:

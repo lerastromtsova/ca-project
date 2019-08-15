@@ -33,4 +33,4 @@ def check_host(ip, port):
     return ip_up
 
 
-assert check_host(HOST, PORT), True
+assert check_host(HOST, PORT), False

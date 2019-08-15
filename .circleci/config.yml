@@ -13,6 +13,17 @@ jobs:
           paths:
             - .
 
+  linting:
+    docker:
+      - image: $DOCKER_USER/ca-project:latest
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Lint Test
+          command: python -m flake8 ./run.py
+          # only testing this because other files are out of scope
+
   test:
     docker:
       - image: $DOCKER_USER/ca-project:latest
@@ -75,21 +86,28 @@ workflows:
   build_and_test:
     jobs:
       - dockerize
+      - linting:
+          requires:
+          - dockerize
       - test:
           requires:
             - dockerize
+            - linting
       - deploy-staging:
           requires:
             - dockerize
             - test
+            - linting
       - deploy-production:
           requires:
             - dockerize
             - test
             - deploy-staging
             - functional-test
+            - linting
       - functional-test:
           requires:
             - deploy-staging
+            - linting
 
   

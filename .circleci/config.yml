@@ -25,10 +25,13 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      - add_ssh_keys:
+          fingerprints:
+            - "bc:b2:8d:c5:3c:61:9e:44:93:37:a3:2b:cf:36:09:a2"
       - run:
           name: Deploy Over SSH
           command: |
-            ssh -i $SSH_KEY -oStrictHostKeyChecking=no ubuntu@35.187.61.114 "apt-get update -y && apt-get install docker -y && docker-compose up"
+            ssh -oStrictHostKeyChecking=no ubuntu@35.187.61.114 "apt-get update -y && apt-get install docker -y && docker-compose up"
 
 
 workflows:

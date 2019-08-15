@@ -4,5 +4,3 @@ services:
         image: vstromtsova/ca-project:latest
         ports:
             - "5000:5000"
-        volumes:
-            - .:.

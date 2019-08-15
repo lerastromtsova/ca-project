@@ -106,15 +106,18 @@ workflows:
       - linting:
           requires:
           - dockerize
+          - package
       - test:
           requires:
             - dockerize
             - linting
+            - package
       - deploy-staging:
           requires:
             - dockerize
             - test
             - linting
+            - package
       - deploy-production:
           requires:
             - dockerize
@@ -122,9 +125,11 @@ workflows:
             - deploy-staging
             - functional-test
             - linting
+            - package
       - functional-test:
           requires:
             - deploy-staging
             - linting
+            - package
 
   

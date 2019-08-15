@@ -17,11 +17,20 @@ jobs:
         paths:
           - .
 
+  build:
 
-  package:
 
-    docker:
-      - image: vstromtsova/ca-project_web:latest
+    steps:
+      - attach_workspace:
+        at: .
+    - run:
+        name: Create artifact
+        command: |
+          zip codechan.zip .
+
+
+  deploy:
+
     steps:
       - attach_workspace:
           at: .

@@ -28,7 +28,7 @@ jobs:
       - run:
           name: Deploy Over SSH
           command: |
-            ssh ubuntu@35.187.61.114 "apt-get update -y && apt-get install docker -y && docker-compose up" -y      
+            ssh -i $SSH_KEY -oStrictHostKeyChecking=no ubuntu@35.187.61.114 "apt-get update -y && apt-get install docker -y && docker-compose up"
 
 
 workflows:

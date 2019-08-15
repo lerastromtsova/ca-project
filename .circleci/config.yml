@@ -22,11 +22,11 @@ jobs:
       - image: vstromtsova/ca-project_web:latest
     steps:
       - attach_workspace:
-        at: .
+          at: .
       - run:
-        name: Create artifact
-        command: |
-          zip codechan.zip .
+          name: Create artifact
+          command: |
+            zip codechan.zip .
 
   deploy:
     docker:

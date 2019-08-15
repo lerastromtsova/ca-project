@@ -18,7 +18,7 @@ jobs:
       - image: $DOCKER_USER/ca-project:$CIRCLE_SHA1
     steps:
       - attach_workspace:
-        at: .
+          at: .
       - run:
           name: Python Test
           command:

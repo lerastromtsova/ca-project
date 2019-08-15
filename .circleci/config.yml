@@ -3,21 +3,23 @@ jobs:
 
   test:
     docker:
-    - image: vstromtsova/ca-project_web:latest
+      - image: vstromtsova/ca-project_web:latest
     steps:
-    - checkout
-    - run:
-        name: Python Test
-        command:
-          python tests.py
-    - store_test_results:
-        path: build/test-results
-    - persist_to_workspace:
-        root: .
-        paths:
-          - .
+      - checkout
+      - run:
+          name: Python Test
+          command:
+            python tests.py
+      - store_test_results:
+          path: build/test-results
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
 
   build:
+    docker:
+      - image: vstromtsova/ca-project_web:latest
     steps:
       - attach_workspace:
         at: .
@@ -26,9 +28,9 @@ jobs:
         command: |
           zip codechan.zip .
 
-
   deploy:
-
+    docker:
+      - image: vstromtsova/ca-project_web:latest
     steps:
       - attach_workspace:
           at: .
@@ -38,7 +40,10 @@ jobs:
       - run:
           name: Deploy Over SSH
           command: |
-            ssh -oStrictHostKeyChecking=no ubuntu@35.187.61.114 "sudo apt-get update -y && sudo apt-get install docker -y && docker-compose up"
+            ssh -oStrictHostKeyChecking=no ubuntu@35.187.61.114 "sudo apt-get update -y
+            && sudo apt-get install docker -y
+            && docker pull vstromtsova/ca-project_web:latest
+            && docker container run -d vstromtsova/ca-project_web"
 
 
 workflows:

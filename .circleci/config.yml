@@ -12,6 +12,21 @@ jobs:
           root: .
           paths:
             - .
+  package:
+    docker:
+      - image: $DOCKER_USER/ca-project:latest
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Zip source code
+          command: |
+              apt-get update -y
+              apt-get install zip -y
+              zip codechan.zip .
+      - store_artifacts:
+          path: /code/artifact
+          destination: prefix
 
   linting:
     docker:
@@ -34,8 +49,8 @@ jobs:
           name: Python Test
           command:
             python tests.py
-      - store_test_results:
-          path: build/test-results
+#      - store_test_results:
+#          path: build/test-results
 
   functional-test:
     docker:
@@ -47,8 +62,8 @@ jobs:
           name: Python Functional Test
           command:
             python functional_tests.py
-      - store_test_results:
-          path: build/test-results/functional-test
+#      - store_test_results:
+#          path: build/test-results/functional-test
 
 
   deploy-staging:

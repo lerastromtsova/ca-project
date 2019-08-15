@@ -1,24 +1,33 @@
 version: 2.0
 jobs:
   package:
+
     docker:
       - image: vstromtsova/ca-project_web:latest
     steps:
+      - checkout
       - run:
           name: Python
           command: 
-            python run.py       
+            python run.py
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
 
   test: 
     docker:
       - image: vstromtsova/ca-project_web:latest
     steps:
+      - attach_workspace:
+          at: .
       - run:
           name: Python Test
           command:
             python tests.py
       - store_test_results:
           path: build/test-results
+
 
 
 workflows:

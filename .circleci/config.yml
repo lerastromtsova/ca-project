@@ -98,40 +98,63 @@ jobs:
             scp -oStrictHostKeyChecking=no -r ./docker-compose.yml "ubuntu@35.187.61.114:."
             ssh -oStrictHostKeyChecking=no ubuntu@35.187.61.114 "sudo apt-get update -y && sudo apt-get install docker -y && docker pull vstromtsova/ca-project_web:latest && docker-compose up -d"
 
+#workflows:
+#  version: 2
+#  build_and_test:
+#    jobs:
+#      - dockerize
+#      - package:
+#          requires: dockerize
+#      - linting:
+#          requires:
+#          - dockerize
+#          - package
+#      - test:
+#          requires:
+#            - dockerize
+#            - linting
+#            - package
+#      - deploy-staging:
+#          requires:
+#            - dockerize
+#            - test
+#            - linting
+#            - package
+#      - deploy-production:
+#          requires:
+#            - dockerize
+#            - test
+#            - deploy-staging
+#            - functional-test
+#            - linting
+#            - package
+#      - functional-test:
+#          requires:
+#            - deploy-staging
+#            - linting
+#            - package
 workflows:
   version: 2
   build_and_test:
     jobs:
       - dockerize
       - package:
-          requires: dockerize
+          requires:
+            - dockerize
       - linting:
           requires:
-          - dockerize
-          - package
+            - package
       - test:
           requires:
-            - dockerize
             - linting
-            - package
       - deploy-staging:
           requires:
-            - dockerize
             - test
-            - linting
-            - package
-      - deploy-production:
-          requires:
-            - dockerize
-            - test
-            - deploy-staging
-            - functional-test
-            - linting
-            - package
       - functional-test:
           requires:
             - deploy-staging
-            - linting
-            - package
+      - deploy-production:
+          requires:
+            - functional-test
 
   

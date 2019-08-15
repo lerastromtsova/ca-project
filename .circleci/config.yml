@@ -87,6 +87,7 @@ workflows:
             - dockerize
             - test
             - deploy-staging
+            - functional-test
       - functional-test:
           requires:
             - deploy-staging

@@ -21,7 +21,7 @@ jobs:
           at: .
       - run:
           name: Lint Test
-          command: flake8 .
+          command: python2.7 - flake8 /code
 
   test:
     docker:

@@ -20,7 +20,7 @@ jobs:
       - image: vstromtsova/ca-project_web:latest
     steps:
       - attach_workspace:
-        at: .
+          at: .
 
       - run:
           name: Python

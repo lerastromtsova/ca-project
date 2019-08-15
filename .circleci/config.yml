@@ -1,0 +1,57 @@
+version: 2.0
+jobs:
+  test:
+    docker:
+      - image: circleci/openjdk:8-jdk
+    steps:
+      # clone and build?
+      - checkout 
+      - run:
+          name: Gradle test
+          command: 
+            gradle test
+      # - run:
+      #     name: Gradle jar
+      #     command: 
+      #       gradle jar        
+      - store_test_results:
+          path: build/test-results
+      # - store_artifacts:
+      #     path: build/libs
+      #     destination: prefix
+      - persist_to_workspace:
+          root: . #the folder to start the workspace from.
+          paths: 
+              - . #if you want all of test to be persisted in the workspace. Note: Do not use both path examples, since 1 is also in . path
+      # - attach_workspace:
+      #     at: /tmp/workspace
+  package:
+    docker:
+      - image: vstromtsova/ca-project_web:latest
+    steps:
+      - run:
+          name: Python
+          command: 
+            python run.py       
+
+  test: 
+    docker:
+      - image: vstromtsova/ca-project_web:latest
+    steps:
+      - run:
+          name: Python Test
+          command:
+            python test.py
+      - store_test_results:
+          path: build/test-results
+
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - test
+      - package:
+          requires:
+            - test
+  

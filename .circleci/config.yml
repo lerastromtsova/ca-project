@@ -23,7 +23,9 @@ jobs:
           command: |
               apt-get update -y
               apt-get install zip -y
-              zip /code/artifact/codechan.zip .
+              cd /code
+              mkdir artifact
+              zip -r artifact/codechan.zip .
       - store_artifacts:
           path: /code/artifact
           destination: prefix

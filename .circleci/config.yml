@@ -85,28 +85,28 @@ workflows:
   build_and_test:
     jobs:
       - dockerize
+      - linting:
+          requires:
+          - dockerize
       - test:
           requires:
             - dockerize
-            - listing
-      - listing:
-          requires:
-          - dockerize
+            - linting
       - deploy-staging:
           requires:
             - dockerize
             - test
-            -listing
+            -linting
       - deploy-production:
           requires:
             - dockerize
             - test
             - deploy-staging
             - functional-test
-            - listing
+            - linting
       - functional-test:
           requires:
             - deploy-staging
-            - listing
+            - linting
 
   

@@ -28,7 +28,7 @@ jobs:
 #          command: |
 #            zip codechan.zip .
 
-  deploy:
+  deploy-staging:
     docker:
       - image: vstromtsova/ca-project_web:latest
     steps:
@@ -40,7 +40,22 @@ jobs:
       - run:
           name: Deploy Over SSH
           command: |
-            ssh -oStrictHostKeyChecking=no ubuntu@35.187.61.114 "sudo apt-get update -y && sudo apt-get install docker -y && docker pull vstromtsova/ca-project_web:latest && docker container run -p 5000:5000 -d vstromtsova/ca-project_web"
+            ssh -oStrictHostKeyChecking=no ubuntu@34.77.191.226 "sudo apt-get update -y && sudo apt-get install docker -y && docker pull vstromtsova/ca-project_web:latest && docker container run -p 5000:5000 -d vstromtsova/ca-project_web"
+
+  deploy-production:
+    docker:
+    - image: vstromtsova/ca-project_web:latest
+    steps:
+    - attach_workspace:
+        at: .
+    - add_ssh_keys:
+        fingerprints:
+        - "bc:b2:8d:c5:3c:61:9e:44:93:37:a3:2b:cf:36:09:a2"
+    - run:
+        name: Deploy Over SSH
+        command: |
+          ssh -oStrictHostKeyChecking=no ubuntu@35.187.61.114 "sudo apt-get update -y && sudo apt-get install docker -y && docker pull vstromtsova/ca-project_web:latest && docker container run -p 5000:5000 -d vstromtsova/ca-project_web"
+
 
 
 workflows:
@@ -51,8 +66,12 @@ workflows:
 #      - build:
 #          requires:
 #            - test
-      - deploy:
+      - deploy-staging:
           requires:
             - test
-#            - build
+      - deploy-production:
+          requires:
+            - test
+            - deploy-staging
+
   

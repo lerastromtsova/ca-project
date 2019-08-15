@@ -96,7 +96,7 @@ workflows:
           requires:
             - dockerize
             - test
-            -linting
+            - linting
       - deploy-production:
           requires:
             - dockerize

@@ -33,5 +33,5 @@ def check_host(ip, port):
     return ip_up
 
 
-assert check_host(HOST, PORT) == False
+assert check_host(HOST, PORT) == True
 print("Functional test passed <3")

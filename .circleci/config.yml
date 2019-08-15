@@ -35,7 +35,7 @@ jobs:
           command:
             python tests.py
       - store_test_results:
-          path: build/test-results/unit-test
+          path: build/test-results
 
   functional-test:
     docker:

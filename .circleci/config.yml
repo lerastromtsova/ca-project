@@ -40,10 +40,7 @@ jobs:
       - run:
           name: Deploy Over SSH
           command: |
-            ssh -oStrictHostKeyChecking=no ubuntu@35.187.61.114 "sudo apt-get update -y
-            && sudo apt-get install docker -y
-            && docker pull vstromtsova/ca-project_web:latest
-            && docker container run -d vstromtsova/ca-project_web"
+            ssh -oStrictHostKeyChecking=no ubuntu@35.187.61.114 "sudo apt-get update -y && sudo apt-get install docker -y && docker pull vstromtsova/ca-project_web:latest && docker container run -d vstromtsova/ca-project_web"
 
 
 workflows:

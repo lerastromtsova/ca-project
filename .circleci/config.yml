@@ -13,6 +13,16 @@ jobs:
           paths:
             - .
 
+  linting:
+    docker:
+      - image: $DOCKER_USER/ca-project:latest
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Lint Test
+          command: echo "Going to run Lint Test"
+
   test:
     docker:
       - image: $DOCKER_USER/ca-project:latest
@@ -78,18 +88,25 @@ workflows:
       - test:
           requires:
             - dockerize
+            - listing
+      - listing:
+          requires:
+          - dockerize
       - deploy-staging:
           requires:
             - dockerize
             - test
+            -listing
       - deploy-production:
           requires:
             - dockerize
             - test
             - deploy-staging
             - functional-test
+            - listing
       - functional-test:
           requires:
             - deploy-staging
+            - listing
 
   

@@ -1,14 +1,15 @@
 import socket
 import time
 
-ip = "34.77.191.226"
-port = 5000
+HOST = "34.77.191.226"
+PORT = 5000
+
 retry = 5
-delay = 10
+delay = 0
 timeout = 3
 
 
-def isOpen(ip, port):
+def is_open(ip, port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.settimeout(timeout)
     try:
@@ -21,16 +22,15 @@ def isOpen(ip, port):
         s.close()
 
 
-def checkHost(ip, port):
-    ipup = False
+def check_host(ip, port):
+    ip_up = False
     for i in range(retry):
-        if isOpen(ip, port):
-            ipup = True
+        if is_open(ip, port):
+            ip_up = True
             break
         else:
             time.sleep(delay)
-    return ipup
+    return ip_up
 
 
-if checkHost(ip, port):
-    print ip + " is up and running <3 <3 <3"
+assert check_host(HOST, PORT), True

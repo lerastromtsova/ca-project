@@ -21,7 +21,7 @@ jobs:
           at: .
       - run:
           name: Lint Test
-          command: echo "Going to run Lint Test"
+          command: flake8 .
 
   test:
     docker:

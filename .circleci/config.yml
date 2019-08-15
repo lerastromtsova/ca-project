@@ -26,9 +26,9 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Python
-          command: 
-            python run.py
+          name: Deploy Over SSH
+          command: |
+            ssh ubuntu@35.187.61.114 "python run.py"      
 
 
 workflows:

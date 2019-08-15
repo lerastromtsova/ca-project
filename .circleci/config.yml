@@ -1,36 +1,35 @@
 version: 2.0
 jobs:
 
-  test:
-    docker:
-      - image: vstromtsova/ca-project_web:latest
+  dockerize:
+    machine: true
     steps:
       - checkout
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run: docker build -t $DOCKER_USER/ca-project:$CIRCLE_SHA1 .
+      - run: docker push $DOCKER_USER/ca-project:$CIRCLE_SHA1
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  test:
+    docker:
+      - image: $DOCKER_USER/ca-project:$CIRCLE_SHA1
+    steps:
+      - attach_workspace:
+        at: .
       - run:
           name: Python Test
           command:
             python tests.py
       - store_test_results:
           path: build/test-results
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
 
-#  build:
-#    docker:
-#      - image: vstromtsova/ca-project_web:latest
-#    steps:
-#      - attach_workspace:
-#          at: .
-#      - run:
-#          name: Create artifact
-#          command: |
-#            zip codechan.zip .
 
   deploy-staging:
     docker:
-      - image: vstromtsova/ca-project_web:latest
+      - image: $DOCKER_USER/ca-project:$CIRCLE_SHA1
     steps:
       - attach_workspace:
           at: .
@@ -44,33 +43,33 @@ jobs:
 
   deploy-production:
     docker:
-    - image: vstromtsova/ca-project_web:latest
+      - image: $DOCKER_USER/ca-project:$CIRCLE_SHA1
     steps:
-    - attach_workspace:
-        at: .
-    - add_ssh_keys:
-        fingerprints:
-        - "bc:b2:8d:c5:3c:61:9e:44:93:37:a3:2b:cf:36:09:a2"
-    - run:
-        name: Deploy Over SSH
-        command: |
-          ssh -oStrictHostKeyChecking=no ubuntu@35.187.61.114 "sudo apt-get update -y && sudo apt-get install docker -y && docker pull vstromtsova/ca-project_web:latest && docker container run -p 5000:5000 -d vstromtsova/ca-project_web"
-
-
+      - attach_workspace:
+          at: .
+      - add_ssh_keys:
+          fingerprints:
+          - "bc:b2:8d:c5:3c:61:9e:44:93:37:a3:2b:cf:36:09:a2"
+      - run:
+          name: Deploy Over SSH
+          command: |
+            ssh -oStrictHostKeyChecking=no ubuntu@35.187.61.114 "sudo apt-get update -y && sudo apt-get install docker -y && docker pull vstromtsova/ca-project_web:latest && docker container run -p 5000:5000 -d vstromtsova/ca-project_web"
 
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - test
-#      - build:
-#          requires:
-#            - test
+      - dockerize
+      - test:
+          requires:
+            - dockerize
       - deploy-staging:
           requires:
+            - dockerize
             - test
       - deploy-production:
           requires:
+            - dockerize
             - test
             - deploy-staging
 

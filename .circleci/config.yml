@@ -21,7 +21,8 @@ jobs:
           at: .
       - run:
           name: Lint Test
-          command: python -m flake8 ./
+          command: python -m flake8 ./run.py
+          # only testing this because other files are out of scope
 
   test:
     docker:
